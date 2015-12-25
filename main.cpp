@@ -26,7 +26,26 @@ int main() {
     cout<<"*   ##   ##   #        #####      ###    #### #  #     #    *"<<endl;
     cout<<"*************************************************************"<<endl;
 
+    FPNum *n;
+    char s[999];
 
+    while(1)
+        try
+        {
+//            char a[999],b[999];
+//            cin>>a;FPNum na(a);cout<<na<<endl;
+//            cin>>b;FPNum nb(b);cout<<nb<<endl;
+//
+//            cout<<(na+nb)<<endl<<(na-nb)<<endl<<endl;
 
+            cin>>s;
+            n=new FPNum(s);
+
+            cout<<*n<<endl;
+        }
+        catch (char const *s)
+        {
+            cout<<s<<endl<<endl;
+        }
     return 0;
 }

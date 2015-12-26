@@ -15,33 +15,55 @@
 
 using namespace std;
 
-int main() {
-    cout<<"*************************************************************"<<endl;
-    cout<<"*      #                         #                          *"<<endl;
-    cout<<"*      #                         #                          *"<<endl;
-    cout<<"*     ###     # ###    #####   ######    ######  # ####     *"<<endl;
-    cout<<"*     # #     ##      #          #      #     #  ##    #    *"<<endl;
-    cout<<"*    #####    #       #          #      #     #  #     #    *"<<endl;
-    cout<<"*    #   #    #       #          #      #    ##  #     #    *"<<endl;
-    cout<<"*   ##   ##   #        #####      ###    #### #  #     #    *"<<endl;
-    cout<<"*************************************************************"<<endl;
+int main(int argc, char *args[])
+{
+//    cout<<"*************************************************************"<<endl;
+//    cout<<"*      #                         #                          *"<<endl;
+//    cout<<"*      #                         #                          *"<<endl;
+//    cout<<"*     ###     # ###    #####   ######    ######  # ####     *"<<endl;
+//    cout<<"*     # #     ##      #          #      #     #  ##    #    *"<<endl;
+//    cout<<"*    #####    #       #          #      #     #  #     #    *"<<endl;
+//    cout<<"*    #   #    #       #          #      #    ##  #     #    *"<<endl;
+//    cout<<"*   ##   ##   #        #####      ###    #### #  #     #    *"<<endl;
+//    cout<<"*************************************************************"<<endl;
 
-    FPNum *n;
-    char s[999];
 
-    while(1)
+//    FPNum *a,*b;
+//    char s[999];
+    int i=1000;
+
+//    int32_t a=999999999,b=999999999;
+//    cout<<a*(int64_t)b<<endl<<sizeof(a*(int64_t)b)<<endl<<endl;
+    while(i--)
         try
         {
-//            char a[999],b[999];
-//            cin>>a;FPNum na(a);cout<<na<<endl;
-//            cin>>b;FPNum nb(b);cout<<nb<<endl;
+            char a[999],b[999];
+
+            cin>>a;
+            FPNum *na=new FPNum(a);
+            cout<<*na<<endl;
+
+            cin>>b;
+            FPNum *nb=new FPNum(b);
+            cout<<*nb<<endl;
+
+
+            cout<<(*na+*nb)<<endl<<(*na-*nb)<<endl<<(*na**nb)<<endl<<endl;
+
+//            delete na;
+//            delete nb;
+//            cin>>s;
+//            n=new FPNum(s);
+//            FPNum d(*n);
+//            FPNum k;
 //
-//            cout<<(na+nb)<<endl<<(na-nb)<<endl<<endl;
+//            cout<<k<<endl;
+//
+//            k=d;
+//
+//            cout<<k<<endl;
 
-            cin>>s;
-            n=new FPNum(s);
 
-            cout<<*n<<endl;
         }
         catch (char const *s)
         {

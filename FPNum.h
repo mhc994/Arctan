@@ -20,17 +20,23 @@ private:
     int intL,decL;
     bool sign;
 
+    void normalize();
+    void deleteZero();
+
+//    FPNum(const FPNum &rhs);
+//    FPNum &operator=(const FPNum &rhs);
+
 
 public:
-    FPNum()
-    {
-        sign = true;
-        intL=1;
-        decL=accuracy/9+1;
-        intPart=new int32_t[intL+decL];
-        decPart=intPart+intL;
-        memset(intPart,0,(intL+decL)*4);
-    }
+//    FPNum()
+//    {
+//        sign = true;
+//        intL=1;
+//        decL=accuracy/9+1;
+//        intPart=new int32_t[intL+decL];
+//        decPart=intPart+intL;
+//        memset(intPart,0,sizeof(int32_t[intL+decL]));
+//    }
 
 
     ~FPNum()
@@ -39,11 +45,9 @@ public:
             delete[] intPart;
     }
 
-    void normalize();
-
-    
 
     FPNum(char *s);
+    FPNum(const int intL,const int decL);
     FPNum(const FPNum &ins);
     FPNum & operator =(const FPNum &ins);
     FPNum operator +(const FPNum &ins);
@@ -55,8 +59,6 @@ public:
 //    bool operator>(const FPNum & T)const;   //大数和另一个大数的大小比较
     bool operator>(const int & t)const;      //大数和一个int类型的变量的大小比较
 
-//    BigNum(const int);       //将一个int类型的变量转化为大数
-
 
     friend ostream& operator<<(ostream&,const FPNum&);
 //    friend istream& operator>>(istream&,FPNum&);
@@ -64,5 +66,6 @@ public:
 
 };
 
+ostream &operator<<(ostream &out, const FPNum &b);
 
 #endif //ARCTAN_FPNUM_H

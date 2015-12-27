@@ -293,6 +293,37 @@ FPNum FPNum::operator*(const FPNum &ins)
 
     return res;
 }
+
+
+FPNum FPNum::operator /(const int32_t divisor)
+{
+    if(divisor==0)
+    {
+        throw "除零错@FPNum::operator /(const int32_t divisor)";
+    }
+
+    FPNum q(intL,decL);
+    int64_t div=divisor,res=0;
+
+    if(divisor>0)
+        q.sign=sign;
+    else
+    {
+        q.sign = !sign;
+        div = -divisor;
+    }
+
+    for(int i=0;i<intL+decL;i++)
+    {
+        res = res * 1000000000 + intPart[i];
+        q.intPart[i]=(int32_t)(res/div);
+        res=res%div;
+    }
+
+    q.deleteZero();
+
+    return q;
+}
 //
 //FPNum FPNum::operator/(const FPNum &ins)
 //{

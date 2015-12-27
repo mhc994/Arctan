@@ -54,6 +54,7 @@ public:
     FPNum operator -(const FPNum &ins);
     FPNum operator *(const FPNum &ins);
     FPNum operator /(const FPNum &ins);
+    FPNum operator /(const int32_t divisor);
     FPNum operator ^(const FPNum &ins);
 
 //    bool operator>(const FPNum & T)const;   //大数和另一个大数的大小比较

@@ -75,7 +75,7 @@ FPNum::FPNum(char *s)
 
         for (int i=0; i<decL; i++)//小数部分
             for(int b=0;b<4;b++)
-                decPart[i]=decPart[i]*10+decPartC[i*4+b];
+                decPart[i]=(int16_t)(decPart[i]*10+decPartC[i*4+b]);
 
         delete[] decPartC;
 //        decPartC = 0;
@@ -98,7 +98,7 @@ FPNum::FPNum(char *s)
 
         for (int i=0; i<intL; i++)//整数部分
             for(int b=0;b<4;b++)
-                intPart[i]=intPart[i]*10+intPartC[i*4+b];
+                intPart[i]=(int16_t)(intPart[i]*10+intPartC[i*4+b]);
 
         delete[] intPartC;
 //        intPartC = 0;
@@ -121,7 +121,7 @@ FPNum::FPNum(char *s)
 
         for (int i=0; i<decL; i++)//小数部分
             for(int b=0;b<4;b++)
-                decPart[i]=decPart[i]*10+decPartC[i*4+b];
+                decPart[i]=(int16_t)(decPart[i]*10+decPartC[i*4+b]);
 
         delete[] decPartC;
 //        decPartC = 0;
@@ -135,7 +135,7 @@ FPNum::FPNum(char *s)
 
         for (int i=0; i<intL; i++)//整数部分
             for(int b=0;b<4;b++)
-                intPart[i]=intPart[i]*10+intPartC[i*4+b];
+                intPart[i]=(int16_t)(intPart[i]*10+intPartC[i*4+b]);
 
         delete[] intPartC;
 //        intPartC = 0;
@@ -217,9 +217,9 @@ FPNum FPNum::operator-(const FPNum &ins)
 {
     FPNum sum( (intL>ins.intL?intL:ins.intL)+1 ,decL);
     int len = sum.intL+decL;
-    int32_t *n1=new int32_t[2*len];
-    int32_t *n2=n1+len;
-    memset(n1,0, sizeof(int32_t[2*len]));
+    int16_t *n1=new int16_t[2*len];
+    int16_t *n2=n1+len;
+    memset(n1,0, sizeof(int16_t[2*len]));
 
     int j=0;
     if(sign)
@@ -298,7 +298,7 @@ FPNum FPNum::operator /(const int16_t divisor)
 {
     if(divisor==0)
     {
-        throw "除零错@FPNum::operator /(const int32_t divisor)";
+        throw "除零错@FPNum::operator /(const int16_t divisor)";
     }
 
     FPNum q(intL,decL);

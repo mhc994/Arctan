@@ -55,11 +55,17 @@ int main(int argc, char *args[])
 
             cin>>a;
 
-            FPNum *na=new FPNum(a),*nb=new FPNum(a);
+            FPNum *na=new FPNum(a),*nb=new FPNum(a),*ns=new FPNum(a),*nr=new FPNum(a);
 
-            for(int i=0;i<1000;i++)
+            for(int i=0;i<100;i++)
+            {
                 *nb=arctan_taylor(*na);
-            cout<<*nb<<endl;
+                *ns=arctan_simpson(*na);
+                *nr=arctan_romberg(*na);
+            }
+
+
+            cout<<*nb<<endl<<*ns<<endl<<*nr<<endl;
 
 
 //

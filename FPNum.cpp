@@ -566,3 +566,11 @@ FPNum::FPNum(const string s)
 {
     FPNum(s.c_str());
 }
+
+FPNum::FPNum(const int32_t v)
+{
+    char s[30];
+    sprintf(s,"%d",v);
+    FPNum f(s);
+    *this=f;
+}

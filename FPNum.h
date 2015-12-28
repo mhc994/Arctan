@@ -27,15 +27,16 @@ private:
 
 public:
     bool sign;
-//    FPNum()
-//    {
-//        sign = true;
-//        intL=1;
-//        decL=accuracy/4+2;
-//        intPart=new int16_t[intL+decL];
-//        decPart=intPart+intL;
-//        memset(intPart,0,sizeof(int16_t[intL+decL]));
-//    }
+
+    FPNum()
+    {
+        sign = true;
+        intL=1;
+        decL=accuracy/4+2;
+        intPart=new int16_t[intL+decL];
+        decPart=intPart+intL;
+        memset(intPart,0,sizeof(int16_t[intL+decL]));
+    }
 
     ~FPNum()
     {
@@ -47,6 +48,7 @@ public:
     FPNum(const string s);
     FPNum(const int intL,const int decL);
     FPNum(const FPNum &ins);
+    FPNum(const int32_t v);
     FPNum & operator =(const FPNum &ins);
     FPNum operator +(const FPNum &ins);
     FPNum operator -(const FPNum &ins);

@@ -11,9 +11,11 @@
 /*************************************************************/
 
 #include <iostream>
-#include "FPNum.h"
+#include "arctan.h"
 
 using namespace std;
+
+FPNum atan_taylor(const FPNum a);
 
 int main(int argc, char *args[])
 {
@@ -34,35 +36,42 @@ int main(int argc, char *args[])
 
 //    int32_t a=999999999,b=999999999;
 //    cout<<a*(int64_t)b<<endl<<sizeof(a*(int64_t)b)<<endl<<endl;
-    cout<<(-1)/2<<' '<<(-3)/2<<endl;
+//    cout<<(-1)/2<<' '<<(-3)/2<<endl;
     while(i--)
         try
         {
             char a[999],b[999];
-            int32_t d;
-
+//            int16_t d;
+//
 //            cin>>a>>d;
 //            FPNum *na=new FPNum(a);
 //            FPNum *nq=new FPNum((*na)/d);
 //
-//            cout<<*nq<<endl;
+//            cout<<*na*d<<endl;
 //
 //            delete(na);
 //            delete(nq);
 
+
             cin>>a;
-            FPNum *na=new FPNum(a);
-            cout<<*na<<endl;
 
-            cin>>b;
-            FPNum *nb=new FPNum(b);
+            FPNum *na=new FPNum(a),*nb=new FPNum(a);
+
+            for(int i=0;i<1000;i++)
+                *nb=arctan_taylor(*na);
             cout<<*nb<<endl;
-//
-//
-            cout<<'\n'<<(*na+*nb)<<endl<<(*na-*nb)<<endl<<(*na**nb)<<endl<<(*na / *nb)<<endl<<endl;
 
-            delete na;
-            delete nb;
+
+//
+//            cin>>b;
+//            FPNum *nb=new FPNum(b);
+//            cout<<*nb<<endl;
+//
+//
+//            cout<<'\n'<<(*na+*nb)<<endl<<(*na-*nb)<<endl<<(*na**nb)<<endl<<(*na / *nb)<<endl<<endl;
+//
+//            delete na;
+//            delete nb;
 //            cin>>s;
 //            n=new FPNum(s);
 //            FPNum d(*n);
@@ -82,3 +91,5 @@ int main(int argc, char *args[])
         }
     return 0;
 }
+
+

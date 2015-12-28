@@ -17,7 +17,7 @@ class FPNum
 private:
     int16_t *intPart,*decPart;
     int intL,decL;
-    bool sign;
+
 
     void normalize();
     void deleteZero();
@@ -26,6 +26,7 @@ private:
 //    FPNum &operator=(const FPNum &rhs);
 
 public:
+    bool sign;
 //    FPNum()
 //    {
 //        sign = true;
@@ -42,19 +43,24 @@ public:
             delete[] intPart;
     }
 
-    FPNum(char *s);
+    FPNum(const char *s);
+    FPNum(const string s);
     FPNum(const int intL,const int decL);
     FPNum(const FPNum &ins);
     FPNum & operator =(const FPNum &ins);
     FPNum operator +(const FPNum &ins);
     FPNum operator -(const FPNum &ins);
+    FPNum operator -(void);
     FPNum operator *(const FPNum &ins);
+    FPNum operator *(int16_t t);
     FPNum operator /(const FPNum &ins);
     FPNum operator /(const int16_t divisor);
-    FPNum operator ^(const int );
+    FPNum operator ^(const int ) const;
 
-//    bool operator>(const FPNum & T)const;   //大数和另一个大数的大小比较
-    bool operator>(const int & t)const;      //大数和一个int类型的变量的大小比较
+
+    bool operator >(const FPNum & t);   //和另一个FPNum比较
+    bool zero();
+//    bool operator >(FPNum int & t)const;      //大数和一个int类型的变量的大小比较
 
     friend ostream& operator<<(ostream&,const FPNum&);
 //    friend istream& operator>>(istream&,FPNum&);

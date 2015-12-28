@@ -4,7 +4,7 @@
 
 #include "FPNum.h"
 
-int FPNum::accuracy = 20;
+int FPNum::accuracy = 40;
 
 
 
@@ -18,7 +18,7 @@ FPNum::FPNum(const int intL,const int decL)
     memset(intPart,0,sizeof(int16_t)*(intL+decL));
 }
 
-FPNum::FPNum(char *s)
+FPNum::FPNum(const char *s)
 {
     sign = true;
     intL=1;
@@ -416,16 +416,30 @@ FPNum FPNum::operator/(const FPNum &divisor)
 
 
 
-//FPNum FPNum::operator^(const int t)
-//{
-//    return FPNum();
-//}
-//
-//bool FPNum::operator>(const int &t) const
-//{
-//    return false;
-//}
-//
+ FPNum FPNum:: operator^(const int t) const
+{
+    if(t==0)
+    {
+        char z[]="0";
+        return FPNum(z);
+    }
+
+    FPNum r(*this);
+    int i=1;
+    while(i*2<=t)
+    {
+        r=r*r;
+        i*=2;
+    }
+    while(i<t)
+    {
+        r=r**this;
+        i++;
+    }
+    return r;
+}
+
+
 ostream &operator<<(ostream &out, const FPNum &b) //重载输出运算符
 {
     out<<(b.sign?' ':'-');
@@ -482,4 +496,73 @@ void FPNum::deleteZero()
     decPart = intPart+intL;
     memcpy(intPart,data,sizeof(int16_t)*(intL+decL));
     delete[] old;
+}
+
+FPNum FPNum::operator-(void)
+{
+    FPNum r(*this);
+    r.sign=!sign;
+    return r;
+}
+
+bool FPNum::operator >(const FPNum & a)
+{
+    FPNum t(a);
+    //todo test
+    if(sign && !t.sign)
+        return true;
+    if(!sign && t.sign)
+        return false;
+
+    deleteZero();
+    t.deleteZero();
+
+    if(intL!=t.intL)
+        return (intL<t.intL)^sign;
+
+
+    for(int i=0;i<intL+decL;i++)
+    {
+        if (intPart[i] < t.intPart[i])
+            return !sign;
+        if (intPart[i] > t.intPart[i])
+            return sign;
+    }
+
+    return false;
+}
+
+bool FPNum::zero()
+{
+    for(int i=0;i<intL+decL;i++)
+        if(intPart[i])
+            return false;
+    return true;
+}
+
+FPNum FPNum::operator*(int16_t t)
+{
+    FPNum m(intL+1,decL);
+//    m.intPart[0]=0;
+    memset(m.intPart,0, sizeof(int16_t)*(intL+decL+1));
+    m.sign=sign;
+    if(t<0)
+    {
+        t=-t;
+        m.sign=-sign;
+    }
+
+    for(int i=intL+decL;i>0;i--)
+    {
+        int32_t tmpIntPartI=m.intPart[i]+intPart[i-1]*(int32_t)t;
+        m.intPart[i]=(int16_t)( tmpIntPartI %10000);
+        m.intPart[i-1]+=(int16_t)( tmpIntPartI/10000);
+    }
+    m.deleteZero();
+    return m;
+}
+
+FPNum::FPNum(const string s)
+{
+    FPNum(s.c_str());
 }

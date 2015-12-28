@@ -330,7 +330,7 @@ FPNum FPNum::operator /(const int32_t divisor)
 //    return FPNum();
 //}
 //
-//FPNum FPNum::operator^(const FPNum &ins)
+//FPNum FPNum::operator^(const int t)
 //{
 //    return FPNum();
 //}
@@ -355,7 +355,7 @@ ostream &operator<<(ostream &out, const FPNum &b) //重载输出运算符
 void FPNum::normalize()
 {
     for(int i=intL+decL-1;i>0;i--)
-    {
+    {//todo / & %
         while(intPart[i]<0)
         {
             intPart[i-1]--;

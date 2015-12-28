@@ -5,7 +5,6 @@
 #ifndef ARCTAN_FPNUM_H
 #define ARCTAN_FPNUM_H
 
-
 #include <sys/_types/_int32_t.h>
 #include <iostream>
 #include <iomanip>
@@ -26,7 +25,6 @@ private:
 //    FPNum(const FPNum &rhs);
 //    FPNum &operator=(const FPNum &rhs);
 
-
 public:
 //    FPNum()
 //    {
@@ -38,13 +36,11 @@ public:
 //        memset(intPart,0,sizeof(int32_t[intL+decL]));
 //    }
 
-
     ~FPNum()
     {
         if(intPart)
             delete[] intPart;
     }
-
 
     FPNum(char *s);
     FPNum(const int intL,const int decL);
@@ -55,15 +51,13 @@ public:
     FPNum operator *(const FPNum &ins);
     FPNum operator /(const FPNum &ins);
     FPNum operator /(const int32_t divisor);
-    FPNum operator ^(const FPNum &ins);
+    FPNum operator ^(const int );
 
 //    bool operator>(const FPNum & T)const;   //大数和另一个大数的大小比较
     bool operator>(const int & t)const;      //大数和一个int类型的变量的大小比较
 
-
     friend ostream& operator<<(ostream&,const FPNum&);
 //    friend istream& operator>>(istream&,FPNum&);
-
 
 };
 

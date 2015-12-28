@@ -13,17 +13,16 @@ FPNum::FPNum(const int intL,const int decL)
     sign = true;
     this->intL=intL;
     this->decL=decL;
-    intPart=new int32_t[intL+decL];
+    intPart=new int16_t[intL+decL];
     decPart=intPart+intL;
-    memset(intPart,0,sizeof(int32_t[intL+decL]));
+    memset(intPart,0,sizeof(int16_t)*(intL+decL));
 }
 
 FPNum::FPNum(char *s)
 {
     sign = true;
     intL=1;
-    decL=accuracy/9+1;
-//    intPart=new int32_t[intL+decL];
+    decL=accuracy/4+2;
 
     while(*s==' ')//跳过开头的空格
         s++;
@@ -63,43 +62,43 @@ FPNum::FPNum(char *s)
         s++;l--;
 
         intL=1;
-        decL=accuracy/9+1;
+        decL=accuracy/4+2;
 
-        intPart=new int32_t[intL+decL];
+        intPart=new int16_t[intL+decL];
         decPart=intPart+intL;
-        memset(intPart,0,sizeof(int32_t) * (intL+decL));
+        memset(intPart,0,sizeof(int16_t) * (intL+decL));
 
-        char *decPartC=new char[decL*9];
-        memset(decPartC,0, sizeof(char)*(decL*9));
-        for(int i=0; i<decL*9 && i<l ;i++)
+        char *decPartC=new char[decL*4];
+        memset(decPartC,0, sizeof(char)*(decL*4));
+        for(int i=0; i<decL*4 && i<l ;i++)
             decPartC[i]=s[i]-'0';
 
         for (int i=0; i<decL; i++)//小数部分
-            for(int b=0;b<9;b++)
-                decPart[i]=decPart[i]*10+decPartC[i*9+b];
+            for(int b=0;b<4;b++)
+                decPart[i]=decPart[i]*10+decPartC[i*4+b];
 
         delete[] decPartC;
 //        decPartC = 0;
     }
     else if(dotPos==-1)  //输入格式为 XXXXXX(无小数部分)
     {
-        intL=(l%9)?(l/9+1):(l/9);
-        decL=accuracy/9+1;
+        intL=(l%4)?(l/4+1):(l/4);
+        decL=accuracy/4+2;
 
-        intPart=new int32_t[intL+decL];
+        intPart=new int16_t[intL+decL];
         decPart=intPart+intL;
-        memset(intPart,0,sizeof(int32_t[intL+decL]));
+        memset(intPart,0,sizeof(int16_t[intL+decL]));
 
 
-        char *intPartC=new char[intL*9];
-        memset(intPartC,0,sizeof(char[intL*9]));
+        char *intPartC=new char[intL*4];
+        memset(intPartC,0,sizeof(char)*(intL*4));
 
         for(int i=0; i<l ;i++)
-            intPartC[intL*9-l+i]=s[i]-'0';
+            intPartC[intL*4-l+i]=s[i]-'0';
 
         for (int i=0; i<intL; i++)//整数部分
-            for(int b=0;b<9;b++)
-                intPart[i]=intPart[i]*10+intPartC[i*9+b];
+            for(int b=0;b<4;b++)
+                intPart[i]=intPart[i]*10+intPartC[i*4+b];
 
         delete[] intPartC;
 //        intPartC = 0;
@@ -107,36 +106,36 @@ FPNum::FPNum(char *s)
     else// 输入格式为 XXXX.XXXX
     {
         int intLC=dotPos,decLC=l-dotPos-1;
-        intL = (intLC%9)?(intLC/9+1):(intLC/9);
-        decL = accuracy/9+1;
+        intL = (intLC%4)?(intLC/4+1):(intLC/4);
+        decL = accuracy/4+2;
 
-        intPart=new int32_t[intL+decL];
+        intPart=new int16_t[intL+decL];
         decPart=intPart+intL;
-        memset(intPart,0,sizeof(int32_t[intL+decL]));
+        memset(intPart,0,sizeof(int16_t)*(intL+decL));
 
 
-        char *decPartC=new char[decL*9];
-        memset(decPartC,0,sizeof(char[decL*9]));
-        for(int i=0; i<decL*9 && i<decLC ;i++)
+        char *decPartC=new char[decL*4];
+        memset(decPartC,0,sizeof(char)*(decL*4));
+        for(int i=0; i<decL*4 && i<decLC ;i++)
             decPartC[i]=s[i+intLC+1]-'0';
 
         for (int i=0; i<decL; i++)//小数部分
-            for(int b=0;b<9;b++)
-                decPart[i]=decPart[i]*10+decPartC[i*9+b];
+            for(int b=0;b<4;b++)
+                decPart[i]=decPart[i]*10+decPartC[i*4+b];
 
         delete[] decPartC;
 //        decPartC = 0;
 
 
-        char *intPartC=new char[intL*9];
-        memset(intPartC,0,sizeof(char[intL*9]));
+        char *intPartC=new char[intL*4];
+        memset(intPartC,0,sizeof(char)*(intL*4));
 
         for(int i=0; i<intLC ;i++)
-            intPartC[intL*9-intLC+i]=s[i]-'0';
+            intPartC[intL*4-intLC+i]=s[i]-'0';
 
         for (int i=0; i<intL; i++)//整数部分
-            for(int b=0;b<9;b++)
-                intPart[i]=intPart[i]*10+intPartC[i*9+b];
+            for(int b=0;b<4;b++)
+                intPart[i]=intPart[i]*10+intPartC[i*4+b];
 
         delete[] intPartC;
 //        intPartC = 0;
@@ -152,10 +151,10 @@ FPNum::FPNum(const FPNum &ins)
     decL = ins.decL;
     sign = ins.sign;
 
-    intPart = new int32_t[intL+decL];
+    intPart = new int16_t[intL+decL];
     decPart = intPart + intL;
 
-    memcpy(intPart,ins.intPart, sizeof(int32_t[intL+decL]));
+    memcpy(intPart,ins.intPart, sizeof(int16_t)*(intL+decL));
 }
 
 FPNum &FPNum::operator=(const FPNum &ins)
@@ -170,9 +169,9 @@ FPNum &FPNum::operator=(const FPNum &ins)
     decL = ins.decL;
     sign = ins.sign;
 
-    intPart = new int32_t[intL+decL];
+    intPart = new int16_t[intL+decL];
     decPart = intPart + intL;
-    memcpy(intPart,ins.intPart, sizeof(int32_t[intL+decL]));
+    memcpy(intPart,ins.intPart, sizeof(int16_t)*(intL+decL));
 
     return *this;
 }
@@ -182,9 +181,9 @@ FPNum FPNum::operator+(const FPNum &ins)
 
     FPNum sum( (intL>ins.intL?intL:ins.intL)+1 ,decL);
     int len = sum.intL+decL;
-    int32_t *n1=new int32_t[2*len];
-    int32_t *n2=n1+len;
-    memset(n1,0, sizeof(int32_t[2*len]));
+    int16_t *n1=new int16_t[2*len];
+    int16_t *n2=n1+len;
+    memset(n1,0, sizeof(int16_t[2*len]));
 
     int j=0;
     if(sign)
@@ -255,25 +254,25 @@ FPNum FPNum::operator*(const FPNum &ins)
     int l1=intL+decL,l2=ins.intL+ins.decL;
     int lpro=l1+l2;
 
-    int32_t *pro=new int32_t[lpro];
-    memset(pro,0,sizeof(int32_t)*lpro);
+    int16_t *pro=new int16_t[lpro];
+    memset(pro,0,sizeof(int16_t)*lpro);
 
     for(int i=l1-1;i>=0;i--)
         for(int j=l2-1;j>=0;j--)
         {
-            int64_t proB=intPart[i]*(int64_t)ins.intPart[j];
+            int32_t proB=intPart[i]*(int32_t)ins.intPart[j];
 
-            pro[i+j]+=(int32_t)(proB/1000000000);
-            pro[i+j+1]+=(int32_t)(proB%1000000000);
+            pro[i+j]+=(int16_t)(proB/10000);
+            pro[i+j+1]+=(int16_t)(proB%10000);
 
-            while(pro[i + j + 1] > 999999999)
+            while(pro[i + j + 1] > 9999)
             {
-                pro[i+j+1] -= 1000000000;
+                pro[i+j+1] -= 10000;
                 pro[i+j]++;
             }
-            while(pro[i + j] > 999999999)
+            while(pro[i + j] > 9999)
             {
-                pro[i+j] -= 1000000000;
+                pro[i+j] -= 10000;
                 pro[i+j-1]++;
             }
         }
@@ -286,7 +285,7 @@ FPNum FPNum::operator*(const FPNum &ins)
     }
     int resIntL=proIntL-zeroNum,resDecL=decL;
     FPNum res(resIntL,resDecL);
-    memcpy(res.intPart,pro+zeroNum,sizeof(int32_t)*(resIntL+resDecL));
+    memcpy(res.intPart,pro+zeroNum,sizeof(int16_t)*(resIntL+resDecL));
     res.sign=!(sign^ins.sign);
 
     delete[] pro;
@@ -295,7 +294,7 @@ FPNum FPNum::operator*(const FPNum &ins)
 }
 
 
-FPNum FPNum::operator /(const int32_t divisor)
+FPNum FPNum::operator /(const int16_t divisor)
 {
     if(divisor==0)
     {
@@ -315,8 +314,8 @@ FPNum FPNum::operator /(const int32_t divisor)
 
     for(int i=0;i<intL+decL;i++)
     {
-        res = res * 1000000000 + intPart[i];
-        q.intPart[i]=(int32_t)(res/div);
+        res = res * 10000 + intPart[i];
+        q.intPart[i]=(int16_t)(res/div);
         res=res%div;
     }
 
@@ -345,10 +344,10 @@ ostream &operator<<(ostream &out, const FPNum &b) //重载输出运算符
     out<<(b.sign?' ':'-');
     int i;
     for(i=0;i<b.intL;i++)
-        out<<' '<<setfill('0')<<setw(9)<<b.intPart[i];
+        out<<' '<<setfill('0')<<setw(4)<<b.intPart[i];
     out<<'.';
     for(int j=0;j<b.decL;j++)
-        out<<setfill('0')<<setw(9)<<b.decPart[j]<<' ';
+        out<<setfill('0')<<setw(4)<<b.decPart[j]<<' ';
     return out;
 }
 
@@ -359,12 +358,12 @@ void FPNum::normalize()
         while(intPart[i]<0)
         {
             intPart[i-1]--;
-            intPart[i]+=1000000000;
+            intPart[i]+=10000;
         }
-        while(intPart[i]>=1000000000)
+        while(intPart[i]>=10000)
         {
             intPart[i-1]++;
-            intPart[i]-=1000000000;
+            intPart[i]-=10000;
         }
     }
     if(intPart[0]<0)
@@ -381,7 +380,7 @@ void FPNum::deleteZero()
     if(intL<2)
         return;
 
-    int32_t *old=intPart,*data=intPart,zeroNum=0;
+    int16_t *old=intPart,*data=intPart,zeroNum=0;
     while( 0==(*data) && data<(decPart-1) )
     {
         data++;
@@ -392,8 +391,8 @@ void FPNum::deleteZero()
         return;
 
     intL -= zeroNum;
-    intPart = new int32_t[intL+decL];
+    intPart = new int16_t[intL+decL];
     decPart = intPart+intL;
-    memcpy(intPart,data,sizeof(int32_t[intL+decL]));
+    memcpy(intPart,data,sizeof(int16_t)*(intL+decL));
     delete[] old;
 }

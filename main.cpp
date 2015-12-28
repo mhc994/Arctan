@@ -40,28 +40,28 @@ int main(int argc, char *args[])
             char a[999],b[999];
             int32_t d;
 
-            cin>>a>>d;
-            FPNum *na=new FPNum(a);
-            FPNum *nq=new FPNum((*na)/d);
-
-            cout<<*nq<<endl;
-
-            delete(na);
-            delete(nq);
-
-//            cin>>a;
+//            cin>>a>>d;
 //            FPNum *na=new FPNum(a);
-//            cout<<*na<<endl;
+//            FPNum *nq=new FPNum((*na)/d);
 //
-//            cin>>b;
-//            FPNum *nb=new FPNum(b);
-//            cout<<*nb<<endl;
+//            cout<<*nq<<endl;
 //
-//
-//            cout<<(*na+*nb)<<endl<<(*na-*nb)<<endl<<(*na**nb)<<endl<<endl;
+//            delete(na);
+//            delete(nq);
 
-//            delete na;
-//            delete nb;
+            cin>>a;
+            FPNum *na=new FPNum(a);
+            cout<<*na<<endl;
+
+            cin>>b;
+            FPNum *nb=new FPNum(b);
+            cout<<*nb<<endl;
+//
+//
+            cout<<(*na+*nb)<<endl<<(*na-*nb)<<endl<<(*na**nb)<<endl<<endl;
+
+            delete na;
+            delete nb;
 //            cin>>s;
 //            n=new FPNum(s);
 //            FPNum d(*n);

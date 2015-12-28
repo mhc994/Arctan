@@ -15,7 +15,7 @@ class FPNum
 {
     static int accuracy;
 private:
-    int32_t *intPart,*decPart;
+    int16_t *intPart,*decPart;
     int intL,decL;
     bool sign;
 
@@ -30,10 +30,10 @@ public:
 //    {
 //        sign = true;
 //        intL=1;
-//        decL=accuracy/9+1;
-//        intPart=new int32_t[intL+decL];
+//        decL=accuracy/4+2;
+//        intPart=new int16_t[intL+decL];
 //        decPart=intPart+intL;
-//        memset(intPart,0,sizeof(int32_t[intL+decL]));
+//        memset(intPart,0,sizeof(int16_t[intL+decL]));
 //    }
 
     ~FPNum()
@@ -50,7 +50,7 @@ public:
     FPNum operator -(const FPNum &ins);
     FPNum operator *(const FPNum &ins);
     FPNum operator /(const FPNum &ins);
-    FPNum operator /(const int32_t divisor);
+    FPNum operator /(const int16_t divisor);
     FPNum operator ^(const int );
 
 //    bool operator>(const FPNum & T)const;   //大数和另一个大数的大小比较

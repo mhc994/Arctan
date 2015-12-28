@@ -266,7 +266,7 @@ FPNum FPNum::operator*(const FPNum &ins)
             pro[i+j+1]+=(int16_t)(proB%10000);
 
             while(pro[i + j + 1] > 9999)
-            {
+            {//todo / and %
                 pro[i+j+1] -= 10000;
                 pro[i+j]++;
             }
@@ -323,12 +323,99 @@ FPNum FPNum::operator /(const int16_t divisor)
 
     return q;
 }
-//
-//FPNum FPNum::operator/(const FPNum &ins)
-//{
-//    return FPNum();
-//}
-//
+
+
+FPNum FPNum::operator/(const FPNum &divisor)
+{
+    //处理除数
+    int divisorZeroNum=0,divisorL=divisor.intL+divisor.decL;
+    while (divisor.intPart[divisorZeroNum]==0 && divisorZeroNum<divisorL)
+        divisorZeroNum++;
+    int ld=divisorL-divisorZeroNum;
+    if(ld==0)
+        throw "除零错@FPNum::operator/(const FPNum &divisor)";
+    if(ld==1)
+        return *this/divisor.intPart[divisorL];
+
+    int16_t *div=new int16_t[ld];
+    memcpy(div,divisor.intPart+divisorZeroNum,sizeof(int16_t)*ld);
+
+
+    //处理被除数
+    deleteZero();
+    int ls=intL+decL+decL;
+    int16_t *s=new int16_t[ls];
+    memset(s,0, sizeof(int16_t)*ls);
+    memcpy(s,intPart, sizeof(int16_t)*(intL+decL));
+
+    //为商分配内存
+    FPNum q(intL+decL-ld+1,decL);
+    int lq=q.intL+q.decL;
+    q.sign=!(sign^divisor.sign);
+
+    //为每一步的余数分配内存并赋初值
+    int32_t *res=new int32_t[ld+1];
+    res[0]=0;res[1]=0;
+    for (int i = 2; i < ld+1; i++)//初值
+        res[i] = s[i-2];
+
+    //除法计算
+    for(int i=0;i<lq;i++)
+    {
+        for(int j=0;j<ld;j++)
+            res[j]=res[j+1];
+        res[ld]=s[ld+i-1];
+
+        q.intPart[i]=(int16_t) ((res[0]*(int64_t)100000000+res[1]*(int64_t)10000+res[2])/(div[0]*(int64_t)10000+div[1]));
+
+        for(int j=ld-1;j>=0;j--)
+        {
+            res[j+1] -= (div[j] * (int32_t)q.intPart[i])%10000;
+            res[j] -= (div[j] * (int32_t)q.intPart[i])/10000;
+            while(res[j+1]<0)
+            {
+                res[j+1] += 10000;
+                res[j]--;
+            }
+        }
+
+        while(res[0]<0)
+        {
+            q.intPart[i]--;
+            for(int j=ld;j>=0;j--)
+            {
+                res[j+1] += div[j];
+                if(res[j+1]>=10000)
+                {
+                    res[j+1]-=10000;
+                    res[j]++;
+                }
+            }
+        }
+
+    }
+
+    delete[] div;
+    delete[] res;
+    delete[] s;
+
+    if(q.intL==0)
+    {
+        int16_t *newData=new int16_t[lq+1];
+        memcpy(newData+1,q.intPart,sizeof(int16_t)*ld);
+        newData[0]=0;
+
+        delete[] q.intPart;
+        q.intPart=newData;
+        q.intL=1;
+        q.decPart=q.intPart+q.decL;
+    }
+
+    return q;
+}
+
+
+
 //FPNum FPNum::operator^(const int t)
 //{
 //    return FPNum();

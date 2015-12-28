@@ -34,6 +34,7 @@ int main(int argc, char *args[])
 
 //    int32_t a=999999999,b=999999999;
 //    cout<<a*(int64_t)b<<endl<<sizeof(a*(int64_t)b)<<endl<<endl;
+    cout<<(-1)/2<<' '<<(-3)/2<<endl;
     while(i--)
         try
         {
@@ -58,7 +59,7 @@ int main(int argc, char *args[])
             cout<<*nb<<endl;
 //
 //
-            cout<<(*na+*nb)<<endl<<(*na-*nb)<<endl<<(*na**nb)<<endl<<endl;
+            cout<<'\n'<<(*na+*nb)<<endl<<(*na-*nb)<<endl<<(*na**nb)<<endl<<(*na / *nb)<<endl<<endl;
 
             delete na;
             delete nb;

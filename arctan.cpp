@@ -39,7 +39,7 @@ FPNum arctan_simpson( FPNum a)
         return ( arctan_simpson(".2")*(int16_t)8 - arctan_simpson(FPNum("1")/(int16_t)239)*(int16_t)2 - arctan_simpson(FPNum("1")/a) );
 
     FPNum result("0");
-    int n = 1000;
+    int n = 10000;
     for (int16_t i = 0; i < n; i++)
         result = result + derivate(a*i/n) + derivate(a*(2*i+1)/2/n)*4 + derivate(a*(i+1)/n);
 

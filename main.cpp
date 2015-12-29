@@ -12,90 +12,92 @@
 
 #include <iostream>
 #include "arctan.h"
-
+#include <ctime>
 using namespace std;
 
-FPNum atan_taylor(const FPNum a);
+int FPNum::accuracy = 20;
+
+void printHello();
+void printHelp();
 
 int main(int argc, char *args[])
 {
-//    cout<<"*************************************************************"<<endl;
-//    cout<<"*      #                         #                          *"<<endl;
-//    cout<<"*      #                         #                          *"<<endl;
-//    cout<<"*     ###     # ###    #####   ######    ######  # ####     *"<<endl;
-//    cout<<"*     # #     ##      #          #      #     #  ##    #    *"<<endl;
-//    cout<<"*    #####    #       #          #      #     #  #     #    *"<<endl;
-//    cout<<"*    #   #    #       #          #      #    ##  #     #    *"<<endl;
-//    cout<<"*   ##   ##   #        #####      ###    #### #  #     #    *"<<endl;
-//    cout<<"*************************************************************"<<endl;
+    printHello();
+    printHelp();
 
-
-//    FPNum *a,*b;
-//    char s[999];
-    int i=1000;
-
-//    int32_t a=999999999,b=999999999;
-//    cout<<a*(int64_t)b<<endl<<sizeof(a*(int64_t)b)<<endl<<endl;
-//    cout<<(-1)/2<<' '<<(-3)/2<<endl;
-    while(i--)
+    while(true)
         try
         {
-            char a[999],b[999];
-//            int16_t d;
-//
-//            cin>>a>>d;
-//            FPNum *na=new FPNum(a);
-//            FPNum *nq=new FPNum((*na)/d);
-//
-//            cout<<*na*d<<endl;
-//
-//            delete(na);
-//            delete(nq);
+            //提示输入
+            cout<<">>>";
+            fflush(stdout);
 
+            char s[200];
+            cin.getline(s,1000);
 
-            cin>>a;
+            //输入q退出
+            if(s[0]=='q')
+                break;
 
-            FPNum *na=new FPNum(a),*nb=new FPNum(a),*ns=new FPNum(a),*nr=new FPNum(a);
-
-            for(int i=0;i<100;i++)
+            //输入a切换精度
+            if(s[0]=='a' && s[1]==' ')
             {
-                *nb=arctan_taylor(*na);
-                *ns=arctan_simpson(*na);
-                *nr=arctan_romberg(*na);
+                int accuracy;
+                if (sscanf(s+2,"%d",&accuracy)<0)
+                    throw "输入错误,要改变精度请输入a+空格+精度,如a 20";
+                if (accuracy<6)
+                    throw "小数位数必须大于5";
+                FPNum::accuracy=accuracy;
+                cout<<"小数精度切换至"<<accuracy<<"位."<<endl<<endl;
+                continue;
             }
 
+            //三种方法计算arctan(x)
+            FPNum nt,ns,nr,na(s);
+            clock_t t1,t2,t3,t4;
 
-            cout<<*nb<<endl<<*ns<<endl<<*nr<<endl;
+            t1=clock();
+            nt=arctan_taylor(na);
+            t2=clock();
+            ns=arctan_simpson(na);
+            t3=clock();
+            nr=arctan_romberg(na);
+            t4=clock();
 
-
-//
-//            cin>>b;
-//            FPNum *nb=new FPNum(b);
-//            cout<<*nb<<endl;
-//
-//
-//            cout<<'\n'<<(*na+*nb)<<endl<<(*na-*nb)<<endl<<(*na**nb)<<endl<<(*na / *nb)<<endl<<endl;
-//
-//            delete na;
-//            delete nb;
-//            cin>>s;
-//            n=new FPNum(s);
-//            FPNum d(*n);
-//            FPNum k;
-//
-//            cout<<k<<endl;
-//
-//            k=d;
-//
-//            cout<<k<<endl;
-
+            //输出结果
+            cout<<"泰勒公式法:"<<nt<<"  时间(ms):"<<(t2-t1)*1000./CLOCKS_PER_SEC<<endl;
+            cout<<"复化辛普森:"<<ns<<"  时间(ms):"<<(t3-t2)*1000./CLOCKS_PER_SEC<<endl;
+            cout<<"龙贝格方法:"<<nr<<"  时间(ms):"<<(t4-t3)*1000./CLOCKS_PER_SEC<<endl<<endl;
 
         }
         catch (char const *s)
         {
-            cout<<s<<endl<<endl;
+            cout<<s<<endl<<endl<<endl;
+            fflush(stdin);
+            printHelp();
         }
     return 0;
 }
 
 
+void printHello()
+{
+    cout<<"*************************************************************"<<endl;
+    cout<<"*      #                         #                          *"<<endl;
+    cout<<"*      #                         #                          *"<<endl;
+    cout<<"*     ###     # ###    #####   ######    ######  # ####     *"<<endl;
+    cout<<"*     # #     ##      #          #      #     #  ##    #    *"<<endl;
+    cout<<"*    #####    #       #          #      #     #  #     #    *"<<endl;
+    cout<<"*    #   #    #       #          #      #    ##  #     #    *"<<endl;
+    cout<<"*   ##   ##   #        #####      ###    #### #  #     #    *"<<endl;
+    cout<<"*************************************************************"<<endl;
+}
+
+void printHelp()
+{
+    cout<<"·输入自变量的值即可计算Arctan的值,可接受标准的十进制小数输入,如:"<<endl;
+    cout<<"    0   123   12.45   0.123   123.   -.123   -123.45"<<endl;
+    cout<<"·默认精度为保留20位小数,输入a和要保留的小数位数可改变精度,如:"<<endl;
+    cout<<"    >>>a 30\n    小数精度切换至30位."<<endl;
+    cout<<"·输入q退出.                  马浩程 自34 2013011504"<<endl;
+}

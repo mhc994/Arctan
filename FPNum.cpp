@@ -4,9 +4,15 @@
 
 #include "FPNum.h"
 
-int FPNum::accuracy = 40;
-
-
+FPNum::FPNum()
+{
+    sign = true;
+    intL=1;
+    decL=accuracy/4+2;
+    intPart=new int16_t[intL+decL];
+    decPart=intPart+intL;
+    memset(intPart,0,sizeof(int16_t[intL+decL]));
+}
 
 FPNum::FPNum(const int intL,const int decL)
 {
@@ -447,7 +453,7 @@ ostream &operator<<(ostream &out, const FPNum &b) //重载输出运算符
     for(i=0;i<b.intL;i++)
         out<<' '<<setfill('0')<<setw(4)<<b.intPart[i];
     out<<'.';
-    for(int j=0;j<b.decL;j++)
+    for(int j=0;j<((b.accuracy+3)/4);j++)
         out<<setfill('0')<<setw(4)<<b.decPart[j]<<' ';
     return out;
 }

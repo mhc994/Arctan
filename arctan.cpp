@@ -4,7 +4,6 @@
 
 #include "arctan.h"
 
-
 FPNum arctan_taylor(FPNum a)
 {
     if(!a.sign)
@@ -22,7 +21,7 @@ FPNum arctan_taylor(FPNum a)
         if(ni.zero())
             return s;
     }
-    return s;
+    //return s;
 }
 
 FPNum derivate(FPNum a)

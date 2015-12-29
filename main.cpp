@@ -47,7 +47,7 @@ int main(int argc, char *args[])
                     throw "输入错误,要改变精度请输入a+空格+精度,如a 20";
                 if (accuracy<6)
                     throw "小数位数必须大于5";
-                FPNum::accuracy=accuracy;
+                FPNum::accuracy=(accuracy/4+((accuracy%4)?1:0))*4;
                 cout<<"小数精度切换至"<<accuracy<<"位."<<endl<<endl;
                 continue;
             }

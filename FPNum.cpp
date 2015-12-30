@@ -4,7 +4,9 @@
 
 #include "FPNum.h"
 
-FPNum::FPNum()
+using  namespace std;
+
+FPNum::FPNum()//无参构造函数,返回0
 {
     sign = true;
     intL=1;
@@ -14,7 +16,7 @@ FPNum::FPNum()
     memset(intPart,0,sizeof(int16_t[intL+decL]));
 }
 
-FPNum::FPNum(const int intL,const int decL)
+FPNum::FPNum(const int intL,const int decL)//给定长度的构造函数,返回0
 {
     sign = true;
     this->intL=intL;
@@ -24,7 +26,7 @@ FPNum::FPNum(const int intL,const int decL)
     memset(intPart,0,sizeof(int16_t)*(intL+decL));
 }
 
-FPNum::FPNum(const char *s)
+FPNum::FPNum(const char *s)//字符串构造函数
 {
     sign = true;
     intL=1;
@@ -84,7 +86,6 @@ FPNum::FPNum(const char *s)
                 decPart[i]=(int16_t)(decPart[i]*10+decPartC[i*4+b]);
 
         delete[] decPartC;
-//        decPartC = 0;
     }
     else if(dotPos==-1)  //输入格式为 XXXXXX(无小数部分)
     {
@@ -107,7 +108,6 @@ FPNum::FPNum(const char *s)
                 intPart[i]=(int16_t)(intPart[i]*10+intPartC[i*4+b]);
 
         delete[] intPartC;
-//        intPartC = 0;
     }
     else// 输入格式为 XXXX.XXXX
     {
@@ -119,7 +119,7 @@ FPNum::FPNum(const char *s)
         decPart=intPart+intL;
         memset(intPart,0,sizeof(int16_t)*(intL+decL));
 
-
+        //处理小数部分
         char *decPartC=new char[decL*4];
         memset(decPartC,0,sizeof(char)*(decL*4));
         for(int i=0; i<decL*4 && i<decLC ;i++)
@@ -130,9 +130,8 @@ FPNum::FPNum(const char *s)
                 decPart[i]=(int16_t)(decPart[i]*10+decPartC[i*4+b]);
 
         delete[] decPartC;
-//        decPartC = 0;
 
-
+        //处理整数部分
         char *intPartC=new char[intL*4];
         memset(intPartC,0,sizeof(char)*(intL*4));
 
@@ -144,14 +143,24 @@ FPNum::FPNum(const char *s)
                 intPart[i]=(int16_t)(intPart[i]*10+intPartC[i*4+b]);
 
         delete[] intPartC;
-//        intPartC = 0;
     }
-
     deleteZero();
-
 }
 
-FPNum::FPNum(const FPNum &ins)
+FPNum::FPNum(const string s)//由string构造
+{
+    FPNum(s.c_str());
+}
+
+FPNum::FPNum(const int32_t v)//由整数构造
+{
+    char s[30];
+    sprintf(s,"%d",v);
+    FPNum f(s);
+    *this=f;
+}
+
+FPNum::FPNum(const FPNum &ins)//拷贝构造函数
 {
     intL = ins.intL;
     decL = ins.decL;
@@ -163,7 +172,7 @@ FPNum::FPNum(const FPNum &ins)
     memcpy(intPart,ins.intPart, sizeof(int16_t)*(intL+decL));
 }
 
-FPNum &FPNum::operator=(const FPNum &ins)
+FPNum &FPNum::operator=(const FPNum &ins)//重载=
 {
     if(&ins == this)
         return *this;
@@ -182,15 +191,16 @@ FPNum &FPNum::operator=(const FPNum &ins)
     return *this;
 }
 
-FPNum FPNum::operator+(const FPNum &ins)
+FPNum FPNum::operator+(const FPNum &ins)//重载+
 {
-
+    //分配内存
     FPNum sum( (intL>ins.intL?intL:ins.intL)+1 ,decL);
     int len = sum.intL+decL;
     int16_t *n1=new int16_t[2*len];
     int16_t *n2=n1+len;
     memset(n1,0, sizeof(int16_t[2*len]));
 
+    //取出两个数的数据部分
     int j=0;
     if(sign)
         for(int i = len - intL - decL ; i < len ; i++,j++)
@@ -199,6 +209,7 @@ FPNum FPNum::operator+(const FPNum &ins)
         for(int i = len - intL - decL ; i < len ; i++,j++)
             n1[i]=-intPart[j];
 
+    //按位相加并处理进位
     j=0;
     if(ins.sign)
         for(int i = len - ins.intL - ins.decL ; i < len ; i++,j++)
@@ -219,14 +230,16 @@ FPNum FPNum::operator+(const FPNum &ins)
     return sum;
 }
 
-FPNum FPNum::operator-(const FPNum &ins)
+FPNum FPNum::operator-(const FPNum &ins)//重载-
 {
+    //分配内存
     FPNum sum( (intL>ins.intL?intL:ins.intL)+1 ,decL);
     int len = sum.intL+decL;
     int16_t *n1=new int16_t[2*len];
     int16_t *n2=n1+len;
     memset(n1,0, sizeof(int16_t[2*len]));
 
+    //取出两个数的数据部分
     int j=0;
     if(sign)
         for(int i = len - intL - decL ; i < len ; i++,j++)
@@ -235,6 +248,7 @@ FPNum FPNum::operator-(const FPNum &ins)
         for(int i = len - intL - decL ; i < len ; i++,j++)
             n1[i]=-intPart[j];
 
+    //按位相减并处理进位和借位
     j=0;
     if(!ins.sign)
         for(int i = len - ins.intL - ins.decL ; i < len ; i++,j++)
@@ -255,7 +269,7 @@ FPNum FPNum::operator-(const FPNum &ins)
     return sum;
 }
 
-FPNum FPNum::operator*(const FPNum &ins)
+FPNum FPNum::operator*(const FPNum &ins)//重载*
 {
     int l1=intL+decL,l2=ins.intL+ins.decL;
     int lpro=l1+l2;
@@ -263,6 +277,7 @@ FPNum FPNum::operator*(const FPNum &ins)
     int16_t *pro=new int16_t[lpro];
     memset(pro,0,sizeof(int16_t)*lpro);
 
+    //按竖式乘法相乘并处理进位
     for(int i=l1-1;i>=0;i--)
         for(int j=l2-1;j>=0;j--)
         {
@@ -271,20 +286,31 @@ FPNum FPNum::operator*(const FPNum &ins)
             pro[i+j]+=(int16_t)(proB/10000);
             pro[i+j+1]+=(int16_t)(proB%10000);
 
-            while(pro[i + j + 1] > 9999)
-            {//todo / and %
-                pro[i+j+1] -= 10000;
-                pro[i+j]++;
-            }
-            while(pro[i + j] > 9999)
+            //处理进位
+            if(pro[i + j + 1] > 9999)
             {
-                pro[i+j] -= 10000;
-                pro[i+j-1]++;
+                pro[i+j+1] = (int16_t)(pro[i+j+1]%10000);
+                pro[i+j] += (int16_t)(pro[i+j+1]/10000);
             }
+            if(pro[i + j] > 9999)
+            {
+                pro[i+j] = (int16_t)(pro[i+j]%10000);
+                pro[i+j-1] += (int16_t)(pro[i+j]/10000);
+            }
+//            while(pro[i + j + 1] > 9999)
+//            {//todo / and %
+//                pro[i+j+1] -= 10000;
+//                pro[i+j]++;
+//            }
+//            while(pro[i + j] > 9999)
+//            {
+//                pro[i+j] -= 10000;
+//                pro[i+j-1]++;
+//            }
         }
 
+    //删除前部的0
     int zeroNum=0,proDecL=decL+ins.decL,proIntL=lpro-proDecL;
-
     while( 0==(pro[zeroNum]) && (zeroNum+1)<proIntL )
     {
         zeroNum++;
@@ -300,8 +326,9 @@ FPNum FPNum::operator*(const FPNum &ins)
 }
 
 
-FPNum FPNum::operator /(const int16_t divisor)
+FPNum FPNum::operator /(const int16_t divisor)//重载/
 {
+    //检测除数非零
     if(divisor==0)
     {
         throw "除零错@FPNum::operator /(const int16_t divisor)";
@@ -310,6 +337,7 @@ FPNum FPNum::operator /(const int16_t divisor)
     FPNum q(intL,decL);
     int64_t div=divisor,res=0;
 
+    //处理符号
     if(divisor>0)
         q.sign=sign;
     else
@@ -318,6 +346,7 @@ FPNum FPNum::operator /(const int16_t divisor)
         div = -divisor;
     }
 
+    //按竖式除法相除并处理余数
     for(int i=0;i<intL+decL;i++)
     {
         res = res * 10000 + intPart[i];
@@ -331,7 +360,7 @@ FPNum FPNum::operator /(const int16_t divisor)
 }
 
 
-FPNum FPNum::operator/(const FPNum &divisor)
+FPNum FPNum::operator/(const FPNum &divisor)//重载/
 {
     //处理除数
     int divisorZeroNum=0,divisorL=divisor.intL+divisor.decL;
@@ -438,28 +467,28 @@ FPNum FPNum::operator/(const FPNum &divisor)
 
 
 
- FPNum FPNum:: operator^(const int t) const
-{
-    if(t==0)
-    {
-        char z[]="0";
-        return FPNum(z);
-    }
-
-    FPNum r(*this);
-    int i=1;
-    while(i*2<=t)
-    {
-        r=r*r;
-        i*=2;
-    }
-    while(i<t)
-    {
-        r=r**this;
-        i++;
-    }
-    return r;
-}
+// FPNum FPNum:: operator^(const int t) const
+//{
+//    if(t==0)
+//    {
+//        char z[]="0";
+//        return FPNum(z);
+//    }
+//
+//    FPNum r(*this);
+//    int i=1;
+//    while(i*2<=t)
+//    {
+//        r=r*r;
+//        i*=2;
+//    }
+//    while(i<t)
+//    {
+//        r=r**this;
+//        i++;
+//    }
+//    return r;
+//}
 
 
 ostream &operator<<(ostream &out, const FPNum &b) //重载输出运算符
@@ -474,10 +503,10 @@ ostream &operator<<(ostream &out, const FPNum &b) //重载输出运算符
     return out;
 }
 
-void FPNum::normalize()
+void FPNum::normalize()//处理进位 借位 符号
 {
     for(int i=intL+decL-1;i>0;i--)
-    {//todo / & %
+    {
         while(intPart[i]<0)
         {
             intPart[i-1]--;
@@ -498,7 +527,7 @@ void FPNum::normalize()
     }
 }
 
-void FPNum::deleteZero()
+void FPNum::deleteZero()//删除前部的0
 {
     if(intL<2)
         return;
@@ -520,29 +549,32 @@ void FPNum::deleteZero()
     delete[] old;
 }
 
-FPNum FPNum::operator-(void)
+FPNum FPNum::operator-(void)//重载符号
 {
     FPNum r(*this);
     r.sign=!sign;
     return r;
 }
 
-bool FPNum::operator >(const FPNum & a)
+bool FPNum::operator >(const FPNum & a)//重载大于运算符
 {
     FPNum t(a);
-    //todo test
+
+    //符号不同直接判断
     if(sign && !t.sign)
         return true;
     if(!sign && t.sign)
         return false;
 
+    //删除前部的0
     deleteZero();
     t.deleteZero();
 
+    //长度不同直接判断
     if(intL!=t.intL)
         return (intL<t.intL)^sign;
 
-
+    //按位比较
     for(int i=0;i<intL+decL;i++)
     {
         if (intPart[i] < t.intPart[i])
@@ -554,7 +586,7 @@ bool FPNum::operator >(const FPNum & a)
     return false;
 }
 
-bool FPNum::zero()
+bool FPNum::zero()//判断是否为0
 {
     for(int i=0;i<intL+decL;i++)
         if(intPart[i])
@@ -562,11 +594,13 @@ bool FPNum::zero()
     return true;
 }
 
-FPNum FPNum::operator*(int16_t t)
+FPNum FPNum::operator*(int16_t t)//重载与整数的乘法
 {
     FPNum m(intL+1,decL);
 //    m.intPart[0]=0;
 ///    memset(m.intPart,0, sizeof(int16_t)*(intL+decL+1));
+
+    //处理符号
     m.sign=sign;
     if(t<0)
     {
@@ -574,6 +608,7 @@ FPNum FPNum::operator*(int16_t t)
         m.sign=-sign;
     }
 
+    //按位乘并处理进位
     for(int i=intL+decL;i>0;i--)
     {
         int32_t tmpIntPartI=m.intPart[i]+intPart[i-1]*(int32_t)t;
@@ -584,15 +619,4 @@ FPNum FPNum::operator*(int16_t t)
     return m;
 }
 
-FPNum::FPNum(const string s)
-{
-    FPNum(s.c_str());
-}
 
-FPNum::FPNum(const int32_t v)
-{
-    char s[30];
-    sprintf(s,"%d",v);
-    FPNum f(s);
-    *this=f;
-}

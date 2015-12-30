@@ -4,6 +4,8 @@
 
 #include "arctan.h"
 
+using namespace std;
+
 FPNum arctan_taylor(FPNum a)
 {
     if(!a.sign)

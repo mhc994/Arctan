@@ -7,10 +7,10 @@
 /*    #   #    #       #          #      #    ##  #     #    */
 /*   ##   ##   #        #####      ###    #### #  #     #    */
 /*                                                           */
-/*                马浩程     自34     2013011504              */
+/*                     数值分析第二次大作业                     */
+/*  马浩程   自34   2013011504  mhc13@mails.tsinghua.edu.cn   */
 /*************************************************************/
 
-#include <iostream>
 #include "arctan.h"
 #include <ctime>
 using namespace std;
@@ -25,8 +25,6 @@ int main(int argc, char *args[])
     printHello();
     printHelp();
 
-//    FPNum a("1"),b("123456789123");
-//    FPNum c=a/b;
 
     while(true)
         try

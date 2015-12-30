@@ -349,13 +349,29 @@ FPNum FPNum::operator/(const FPNum &divisor)
 
     //处理被除数
     deleteZero();
-    int ls=intL+decL+decL;
-    int16_t *s=new int16_t[ls];
-    memset(s,0, sizeof(int16_t)*ls);
-    memcpy(s,intPart, sizeof(int16_t)*(intL+decL));
+
+    int16_t *s;
+    int qIntL=intL+decL-ld+1;
+    if(qIntL>0)
+    {
+        int ls=intL+decL+decL;
+        s=new int16_t[ls];
+        memset(s,0, sizeof(int16_t)*ls);
+        memcpy(s,intPart, sizeof(int16_t)*(intL+decL));
+    }
+    else
+    {
+//        int ls=intL+decL+decL-qIntL+1;
+        int ls=decL+ld;
+        qIntL=0;
+        s=new int16_t[ls];
+        memset(s,0, sizeof(int16_t)*ls);
+        memcpy(s-qIntL+1,intPart, sizeof(int16_t)*(intL+decL));
+    }
+
 
     //为商分配内存
-    FPNum q(intL+decL-ld+1,decL);
+    FPNum q(qIntL,decL);
     int lq=q.intL+q.decL;
     q.sign=!(sign^divisor.sign);
 
@@ -405,17 +421,17 @@ FPNum FPNum::operator/(const FPNum &divisor)
     delete[] res;
     delete[] s;
 
-    if(q.intL==0)
-    {
-        int16_t *newData=new int16_t[lq+1];
-        memcpy(newData+1,q.intPart,sizeof(int16_t)*ld);
-        newData[0]=0;
-
-        delete[] q.intPart;
-        q.intPart=newData;
-        q.intL=1;
-        q.decPart=q.intPart+q.decL;
-    }
+//    if(q.intL==0)
+//    {
+//        int16_t *newData=new int16_t[lq+1];
+//        memcpy(newData+1,q.intPart,sizeof(int16_t)*ld);
+//        newData[0]=0;
+//
+//        delete[] q.intPart;
+//        q.intPart=newData;
+//        q.intL=1;
+//        q.decPart=q.intPart+q.decL;
+//    }
 
     return q;
 }
@@ -550,7 +566,7 @@ FPNum FPNum::operator*(int16_t t)
 {
     FPNum m(intL+1,decL);
 //    m.intPart[0]=0;
-    memset(m.intPart,0, sizeof(int16_t)*(intL+decL+1));
+///    memset(m.intPart,0, sizeof(int16_t)*(intL+decL+1));
     m.sign=sign;
     if(t<0)
     {

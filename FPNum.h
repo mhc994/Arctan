@@ -8,6 +8,9 @@
 #include <stdint.h>
 #include <iostream>
 #include <iomanip>
+#include <cmath>
+#include <cstring>
+#include <cstdio>
 
 using namespace std;
 

@@ -6,7 +6,7 @@
 #define ARCTAN_ARCTAN_H
 
 #include "FPNum.h"
-#include <cmath>
+
 
 FPNum arctan_taylor( FPNum a);
 FPNum arctan_simpson( FPNum a);

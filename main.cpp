@@ -25,6 +25,9 @@ int main(int argc, char *args[])
     printHello();
     printHelp();
 
+//    FPNum a("1"),b("123456789123");
+//    FPNum c=a/b;
+
     while(true)
         try
         {

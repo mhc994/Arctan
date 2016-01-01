@@ -1,12 +1,4 @@
 /*************************************************************/
-/*      #                         #                          */
-/*      #                         #                          */
-/*     ###     # ###    #####   ######    ######  # ####     */
-/*     # #     ##      #          #      #     #  ##    #    */
-/*    #####    #       #          #      #     #  #     #    */
-/*    #   #    #       #          #      #    ##  #     #    */
-/*   ##   ##   #        #####      ###    #### #  #     #    */
-/*                                                           */
 /*                     数值分析第二次大作业                     */
 /*  马浩程   自34   2013011504  mhc13@mails.tsinghua.edu.cn   */
 /*************************************************************/
@@ -55,20 +47,22 @@ int main(int argc, char *args[])
 
             //三种方法计算arctan(x)
             FPNum nt,ns,nr,na(s);
-            clock_t t1,t2,t3,t4;
+            clock_t t1,t2;
 
             t1=clock();
             nt=arctan_taylor(na);
             t2=clock();
-            ns=arctan_simpson(na);
-            t3=clock();
-            nr=arctan_romberg(na);
-            t4=clock();
+            cout<<"泰勒公式法:"<<nt<<"  时间(ms):"<<(t2-t1)*1000./CLOCKS_PER_SEC;
 
-            //输出结果
-            cout<<"泰勒公式法:"<<nt<<"  时间(ms):"<<(t2-t1)*1000./CLOCKS_PER_SEC<<endl;
-            cout<<"复化辛普森:"<<ns<<"  时间(ms):"<<(t3-t2)*1000./CLOCKS_PER_SEC<<endl;
-            cout<<"龙贝格方法:"<<nr<<"  时间(ms):"<<(t4-t3)*1000./CLOCKS_PER_SEC<<endl<<endl;
+            t1=clock();
+            ns=arctan_simpson(na);
+            t2=clock();
+            cout<<"\n复化辛普森:"<<nt<<"  时间(ms):"<<(t2-t1)*1000./CLOCKS_PER_SEC;
+
+            t1=clock();
+            nr=arctan_romberg(na);
+            t2=clock();
+            cout<<"\n龙贝格方法:"<<nt<<"  时间(ms):"<<(t2-t1)*1000./CLOCKS_PER_SEC<<endl<<endl;
 
         }
         catch (char const *s)
@@ -80,19 +74,6 @@ int main(int argc, char *args[])
     return 0;
 }
 
-
-void printHello()
-{
-    cout<<"*************************************************************"<<endl;
-    cout<<"*      #                         #                          *"<<endl;
-    cout<<"*      #                         #                          *"<<endl;
-    cout<<"*     ###     # ###    #####   ######    ######  # ####     *"<<endl;
-    cout<<"*     # #     ##      #          #      #     #  ##    #    *"<<endl;
-    cout<<"*    #####    #       #          #      #     #  #     #    *"<<endl;
-    cout<<"*    #   #    #       #          #      #    ##  #     #    *"<<endl;
-    cout<<"*   ##   ##   #        #####      ###    #### #  #     #    *"<<endl;
-    cout<<"*************************************************************"<<endl;
-}
 
 void printHelp()
 {

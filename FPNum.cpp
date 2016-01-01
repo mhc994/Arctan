@@ -152,16 +152,17 @@ FPNum::FPNum(const string s)//由string构造
     FPNum(s.c_str());
 }
 
-FPNum::FPNum(const int32_t v)//由整数构造
-{
-    char s[30];
-    sprintf(s,"%d",v);
-    FPNum f(s);
-    *this=f;
-}
+//FPNum::FPNum(const int32_t v)//由整数构造
+//{
+//    char s[30];
+//    sprintf(s,"%d",v);
+//    FPNum f(s);
+//    *this=f;
+//}
 
 FPNum::FPNum(const FPNum &ins)//拷贝构造函数
 {
+
     intL = ins.intL;
     decL = ins.decL;
     sign = ins.sign;
@@ -362,6 +363,7 @@ FPNum FPNum::operator /(const int16_t divisor)//重载/
 
 FPNum FPNum::operator/(const FPNum &divisor)//重载/
 {
+
     //处理除数
     int divisorZeroNum=0,divisorL=divisor.intL+divisor.decL;
     while (divisor.intPart[divisorZeroNum]==0 && divisorZeroNum<divisorL)
@@ -392,10 +394,11 @@ FPNum FPNum::operator/(const FPNum &divisor)//重载/
     {
 //        int ls=intL+decL+decL-qIntL+1;
         int ls=decL+ld;
-        qIntL=0;
+
         s=new int16_t[ls];
         memset(s,0, sizeof(int16_t)*ls);
         memcpy(s-qIntL+1,intPart, sizeof(int16_t)*(intL+decL));
+        qIntL=1;
     }
 
 
@@ -403,6 +406,9 @@ FPNum FPNum::operator/(const FPNum &divisor)//重载/
     FPNum q(qIntL,decL);
     int lq=q.intL+q.decL;
     q.sign=!(sign^divisor.sign);
+
+
+
 
     //为每一步的余数分配内存并赋初值
     int32_t *res=new int32_t[ld+1];
@@ -462,33 +468,34 @@ FPNum FPNum::operator/(const FPNum &divisor)//重载/
 //        q.decPart=q.intPart+q.decL;
 //    }
 
+
     return q;
 }
 
 
 
-// FPNum FPNum:: operator^(const int t) const
-//{
-//    if(t==0)
-//    {
-//        char z[]="0";
-//        return FPNum(z);
-//    }
-//
-//    FPNum r(*this);
-//    int i=1;
-//    while(i*2<=t)
-//    {
-//        r=r*r;
-//        i*=2;
-//    }
-//    while(i<t)
-//    {
-//        r=r**this;
-//        i++;
-//    }
-//    return r;
-//}
+ FPNum FPNum:: operator^(const int t) const
+{
+    if(t==0)
+    {
+        char z[]="0";
+        return FPNum(z);
+    }
+
+    FPNum r(*this);
+    int i=1;
+    while(i*2<=t)
+    {
+        r=r*r;
+        i*=2;
+    }
+    while(i<t)
+    {
+        r=r**this;
+        i++;
+    }
+    return r;
+}
 
 
 ostream &operator<<(ostream &out, const FPNum &b) //重载输出运算符
@@ -594,6 +601,23 @@ bool FPNum::zero()//判断是否为0
     return true;
 }
 
+bool FPNum::zeroAtAccuracy() //判断在accuracy指定的精度下是否为0
+{
+    for(int i=0;i<intL;i++)
+        if(intPart[i])
+            return false;
+
+    if(accuracy%4 == 0)
+        return true;
+
+    int r=decPart[accuracy/4+1];
+
+    for(int i=accuracy%4;i>0;i--)
+        r /= 10000;
+
+    return (r==0);
+}
+
 FPNum FPNum::operator*(int16_t t)//重载与整数的乘法
 {
     FPNum m(intL+1,decL);
@@ -618,5 +642,6 @@ FPNum FPNum::operator*(int16_t t)//重载与整数的乘法
     m.deleteZero();
     return m;
 }
+
 
 

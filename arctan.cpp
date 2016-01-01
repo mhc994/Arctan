@@ -6,7 +6,7 @@
 
 using namespace std;
 
-FPNum arctan_taylor(FPNum a)
+FPNum arctan_taylor(FPNum a)//最佳逼近(泰勒展开)计算Arctan(x)
 {
     if(!a.sign)
         return -arctan_taylor(-a);
@@ -32,46 +32,73 @@ FPNum derivate(FPNum a)
     return one/(one+a*a);
 }
 
-FPNum arctan_simpson( FPNum a)
-{//todo end condition
+FPNum arctan_simpson( FPNum a)//利用复化辛普森公式计算Arctan(x)
+{
     if(!a.sign)
         return -arctan_simpson(-a);
     if(a>FPNum("1.1"))
         return ( arctan_simpson(".2")*(int16_t)8 - arctan_simpson(FPNum("1")/(int16_t)239)*(int16_t)2 - arctan_simpson(FPNum("1")/a) );
 
     FPNum result("0");
-    int n = 10000;
+    int n = (int)pow(10,(FPNum::accuracy-4)/4);
     for (int16_t i = 0; i < n; i++)
         result = result + derivate(a*i/n) + derivate(a*(2*i+1)/2/n)*4 + derivate(a*(i+1)/n);
 
     return result*a/n/6;
 }
 
-FPNum arctan_romberg( FPNum a)
+FPNum arctan_romberg( FPNum a)//利用龙贝格方法计算Arctan(x)
 {//todo end condition
     if(!a.sign)
         return -arctan_romberg(-a);
     if(a>FPNum("1.1"))
         return ( arctan_romberg(".2")*(int16_t)8 - arctan_romberg(FPNum("1")/(int16_t)239)*(int16_t)2 - arctan_romberg(FPNum("1")/a) );
 
-    FPNum results[10][10];
+    typedef FPNum* pNum;
 
+    int imax=a.accuracy*2;//根据递推公式,步数大于该值时,受限于FPNum类的截断误差,龙贝格方法数值已不再改变,因此算法必在此之前已结束
+    int imin=a.accuracy/5;
+    if(imin<10)
+        imin =10;
 
-    for (int i = 0; i < 10; i++)
+    pNum *tList=new pNum[imax*imax];//T表,实际利用率较低,但考虑到mmax不会太大,因此不作改进
+    pNum *m2=new pNum[imax];
+
+    int i ;
+    for ( i = 0; i < imax-1; i++)
     {
-        FPNum result("0");
-        int n = (int16_t)pow(2,i);
+        FPNum result("0"),one("1"),two("2");
 
-        for (int16_t j = 0; j < n; j++)
-            result = result + derivate(a * j / n) + derivate(a * (j + 1) / n);
-        results[0][i]=(result * a /(2*n));
-    }
-    for (int i = 9; i > 0; i--)
-    {
-        int32_t n = (int32_t)pow(4, 10-i);
+        m2[i] = new FPNum( (i==0) ? one : (*m2[i-1]*(int16_t)2) );
 
-        for(int j=0; j<i;j++)
-            results[10-i][j]=(results[9-i][j+1]*n-results[9-i][j])/(n-1);
+        //构造第一列
+        for (FPNum j("0"); *m2[i] > j; j=j+one)
+            result = result + derivate(a * j / *m2[i]) + derivate(a * (j + one) / *m2[i]);
+        tList[0*imax+i]=new FPNum((result * a / 2) / (*m2[i])) ;
+
+        //构造其他列
+        for(int j=1; j<=i;j++)
+        {
+            FPNum m4 = (*m2[j])*(*m2[j]);
+            tList[(j)*imax+(i-j)] = new FPNum( ( *tList[(j-1)*imax+(i-j+1)] * m4 - *tList[(j-1)*imax+(i-j)] ) / (m4-one) );
+        }
+
+        if(i>imin)
+            if( (*tList[(i)*imax+0] - *tList[(i-1)*imax+1] ).zeroAtAccuracy())//判断精度是否足够
+            {
+                i++;
+                break;
+            }
+
     }
-    return results[9][0];
+
+    FPNum r(*tList[(i-2)*imax+1]);
+
+    for(int j=0;j<i;j++)
+        for(int k=0;k<i-j;k++)
+            delete tList[j*imax+k];
+    delete[] tList;
+
+    return r;
+
 }

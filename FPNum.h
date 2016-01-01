@@ -37,7 +37,7 @@ public:
     FPNum(const char *s);//字符串构造函数
     FPNum(const string s);//由string构造
     FPNum(const int intL,const int decL);//给定长度的构造函数,返回0
-    FPNum(const int32_t v);//由整数构造
+//    FPNum(const int32_t v);//由整数构造
 
     FPNum(const FPNum &ins);//拷贝构造函数
     FPNum & operator =(const FPNum &ins);//重载=
@@ -49,9 +49,11 @@ public:
     FPNum operator *(int16_t t);//重载*(整数)
     FPNum operator /(const FPNum &ins);//重载/
     FPNum operator /(const int16_t divisor);//重载/(整数)
+    FPNum operator ^(const int ) const;//重载幂运算
 
     bool operator >(const FPNum & t);   //和另一个FPNum比较
     bool zero();//判断是否为0
+    bool zeroAtAccuracy();//判断在accuracy指定的精度下是否为0
 
     friend ostream& operator<<(ostream&,const FPNum&);//输出
 };
